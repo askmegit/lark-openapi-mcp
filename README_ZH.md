@@ -111,26 +111,24 @@ lark-mcp --version  # 验证安装成功
 
 #### 在 Claude Code 中配置
 
-编辑 `~/.claude/.mcp.json`：
+在 Claude Code 中通过 `/mcp add` 添加，或直接编辑 `~/.claude.json`，在 `mcpServers` 字段中加入：
 
 ```json
-{
-  "mcpServers": {
-    "lark-mcp": {
-      "command": "lark-mcp",
-      "args": [
-        "mcp",
-        "-a", "<your_app_id>",
-        "-s", "<your_app_secret>",
-        "--token-mode", "tenant_access_token",
-        "-t", "preset.doc.default,sheets.v3.spreadsheet.get,sheets.v3.spreadsheetSheet.query,sheets.v2.spreadsheetValues.get"
-      ]
-    }
-  }
+"lark-mcp": {
+  "type": "stdio",
+  "command": "/Users/<you>/.nvm/versions/node/v22.x.x/bin/lark-mcp",
+  "args": [
+    "mcp",
+    "-a", "<your_app_id>",
+    "-s", "<your_app_secret>",
+    "--token-mode", "tenant_access_token",
+    "-t", "preset.doc.default,sheets.v3.spreadsheet.get,sheets.v3.spreadsheetSheet.query,sheets.v2.spreadsheetValues.get"
+  ],
+  "env": {}
 }
 ```
 
-> `lark-mcp` 需在 PATH 中可找到。若使用 nvm，可用完整路径，例如 `/Users/<you>/.nvm/versions/node/v22.x.x/bin/lark-mcp`。
+> 使用绝对路径指向安装好的二进制，避免 nvm 环境下 PATH 未加载的问题。
 
 #### 在 Codex CLI 中配置
 
