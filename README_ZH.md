@@ -94,6 +94,80 @@
 }
 ```
 
+---
+
+### 安装扩展版本（含 Sheets v2 读取支持）
+
+官方包暂不包含 `sheets.v2.spreadsheetValues.get` 工具。如需读取电子表格单元格数据，请使用本扩展分支：
+
+```bash
+npm install -g github:askmegit/lark-openapi-mcp#codex/add-sheets-v2-values-get --ignore-scripts
+lark-mcp --version  # 验证安装成功
+```
+
+> `--ignore-scripts` 用于跳过依赖的原生模块构建脚本（如 protobufjs），分支中已预先编译好 `dist/`，无需本地构建。
+
+安装后，使用 `lark-mcp` 命令替代 `npx @larksuiteoapi/lark-mcp`，配置方式见下方各客户端说明。
+
+#### 在 Claude Code 中配置
+
+编辑 `~/.claude/.mcp.json`：
+
+```json
+{
+  "mcpServers": {
+    "lark-mcp": {
+      "command": "lark-mcp",
+      "args": [
+        "mcp",
+        "-a", "<your_app_id>",
+        "-s", "<your_app_secret>",
+        "--token-mode", "tenant_access_token",
+        "-t", "preset.doc.default,sheets.v3.spreadsheet.get,sheets.v3.spreadsheetSheet.query,sheets.v2.spreadsheetValues.get"
+      ]
+    }
+  }
+}
+```
+
+> `lark-mcp` 需在 PATH 中可找到。若使用 nvm，可用完整路径，例如 `/Users/<you>/.nvm/versions/node/v22.x.x/bin/lark-mcp`。
+
+#### 在 Codex CLI 中配置
+
+编辑 `~/.codex/config.toml`：
+
+```toml
+[mcp_servers.lark-mcp]
+command = "lark-mcp"
+args = ["mcp", "-a", "<your_app_id>", "-s", "<your_app_secret>", "--token-mode", "tenant_access_token", "-t", "preset.doc.default,sheets.v3.spreadsheet.get,sheets.v3.spreadsheetSheet.query,sheets.v2.spreadsheetValues.get"]
+startup_timeout_sec = 15.0
+```
+
+> 建议设置 `startup_timeout_sec`，避免 MCP 进程启动超时导致 Codex 累积僵尸进程。
+
+#### 在 Cursor 中配置
+
+打开 Cursor → Settings → MCP，添加：
+
+```json
+{
+  "mcpServers": {
+    "lark-mcp": {
+      "command": "lark-mcp",
+      "args": [
+        "mcp",
+        "-a", "<your_app_id>",
+        "-s", "<your_app_secret>",
+        "--token-mode", "tenant_access_token",
+        "-t", "preset.doc.default,sheets.v3.spreadsheet.get,sheets.v3.spreadsheetSheet.query,sheets.v2.spreadsheetValues.get"
+      ]
+    }
+  }
+}
+```
+
+---
+
 如需使用**用户身份**访问API，需要先在终端执行 login 登录，注意需要先在开发者后台配置应用的重定向URL，默认是 http://localhost:3000/callback
 
 ```bash
